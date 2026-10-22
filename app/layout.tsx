@@ -4,7 +4,7 @@ import { getLang, t } from "@/lib/i18n";
 import Lang from "@/components/Lang";
 import MobileSidebar from "@/components/MobileSidebar";
 import { pub } from "@/lib/supabase";
-export const metadata = { title: "WaveTech — Consoles rétro Algérie", description: "Game Boy style, handhelds émulateurs et accessoires. Livraison 58 wilayas, paiement à la livraison.", openGraph: { title: "WaveTech", images: ["/og.png"] } };
+export const metadata = { title: "WaveTech — Consoles rétro Algérie", description: "Game Boy style, handhelds émulateurs et accessoires. Livraison 58 wilayas, paiement à la livraison.", icons: { icon: "/wavetech-profile.jpg", shortcut: "/wavetech-profile.jpg" }, openGraph: { title: "WaveTech", images: ["/og.png"] } };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const l = getLang(), s = t();
   const { data: categories } = await pub().from("categories").select("slug,name_fr,name_ar").order("id");
