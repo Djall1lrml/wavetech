@@ -1,31 +1,57 @@
-import Link from "next/link"; import { pub } from "@/lib/supabase"; import { t } from "@/lib/i18n"; import ProductCard from "@/components/ProductCard";
+import Link from "next/link"; import { pub } from "@/lib/supabase"; import { getLang, t } from "@/lib/i18n"; import ProductCard from "@/components/ProductCard"; import LandingProductFilters from "@/components/LandingProductFilters";
 export const revalidate = 60;
 export default async function Home() {
   const s = t();
-  const { data } = await pub().from("products").select("*,product_images(*)").eq("featured", true).limit(8);
+  const lang = getLang();
+  const db = pub();
+  const [{ data }, { data: allProducts }, { data: categories }] = await Promise.all([
+    db.from("products").select("*,product_images(*)").eq("featured", true).limit(8),
+    db.from("products").select("*,product_images(*)").order("created_at", { ascending: false }),
+    db.from("categories").select("id,slug,name_fr,name_ar").order("id"),
+  ]);
+  const benefitIcons = [
+    <svg key="delivery" aria-hidden="true" viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 8h12v10H2zM14 11h4l4 4v3h-8z" /><circle cx="6.5" cy="19" r="1.5" /><circle cx="18.5" cy="19" r="1.5" /><path d="M5 11h6M5 14h4" />
+    </svg>,
+    <svg key="payment" aria-hidden="true" viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 10h18M7 15h4" /><path d="m15 14 1.5 1.5L19 13" />
+    </svg>,
+    <svg key="play" aria-hidden="true" viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 5v14l11-7L8 5Z" /><path d="M4 8v8M2 10v4" />
+    </svg>,
+  ];
   return (<>
-    <section className="wave-hero relative isolate flex min-h-[22rem] items-start justify-center overflow-hidden rounded-2xl border border-neon-c/20 px-4 pt-12 pb-32 mb-10 text-center">
-      <svg aria-hidden="true" viewBox="0 0 1200 420" preserveAspectRatio="xMidYMid slice" className="pointer-events-none absolute inset-0 -z-10 h-full w-full">
-        <defs>
-          <linearGradient id="wave-sea" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#172554" /><stop offset="1" stopColor="#581c87" /></linearGradient>
-          <linearGradient id="wave-foam" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#67e8f9" /><stop offset="1" stopColor="#c4b5fd" /></linearGradient>
-        </defs>
-        <circle cx="930" cy="115" r="68" fill="#ec4899" opacity=".28" />
-        <circle cx="930" cy="115" r="90" fill="none" stroke="#f0abfc" strokeOpacity=".22" />
-        <path d="M0 293c112-39 174-9 258 6 88 16 130-53 210-52 77 2 117 49 178 67 77 22 141-27 222-21 100 8 202 60 332 22v105H0z" fill="#312e81" opacity=".75" />
-        <path d="M0 347c98-51 180-36 274-16 91 20 166 13 218-36 41-38 68-105 136-105 44 0 83 23 114 56-39-17-77-8-95 20 44-15 91-1 113 39 26 47 80 72 158 51 77-21 172-23 282 8v56H0z" fill="url(#wave-sea)" stroke="#a78bfa" strokeOpacity=".75" strokeWidth="3" />
-        <path d="M626 190c44 8 83 31 116 65-27-9-52-7-72 7 48-7 91 15 107 54 13 30 49 48 89 49-41 12-89 3-119-24-31-27-38-63-70-77-28-12-56 0-75 19 17-31 44-43 79-39-22-27-43-43-71-54z" fill="url(#wave-foam)" />
-        <path d="M0 347c98-51 180-36 274-16 91 20 166 13 218-36 41-38 68-105 136-105m108 65c-27-9-52-7-72 7 48-7 91 15 107 54 13 30 49 48 89 49" fill="none" stroke="#cffafe" strokeOpacity=".9" strokeWidth="4" />
-        <path d="M44 385c76-30 134-20 206-4m-160 22c58-22 100-15 147-4m343-28c46-14 83-5 114 14m-80-37c26-9 52-5 72 8" fill="none" stroke="#67e8f9" strokeOpacity=".7" strokeWidth="3" strokeLinecap="round" />
-        <path d="M95 91h4m82 47h4m508-72h4m126 41h4m195 105h4" stroke="#e9d5ff" strokeWidth="4" strokeLinecap="round" />
-      </svg>
-      <div className="relative z-10">
-        <h1 className="font-pixel text-xl sm:text-3xl text-neon-p leading-relaxed drop-shadow-[0_0_12px_#a855f7]">{s.hero}</h1>
-        <Link href="/shop" className="btn mt-8">{s.shop} ▶</Link>
+    <section className="relative isolate mb-10 flex min-h-[28rem] items-center justify-center overflow-hidden rounded-2xl bg-slate-950 px-5 py-12 text-center sm:min-h-[32rem]">
+      <img src="/wavetech-wave.svg" alt="" aria-hidden="true" className="absolute inset-0 -z-20 h-full w-full object-cover" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-slate-950/45 via-blue-950/45 to-slate-950/75" />
+      <div className="max-w-3xl">
+        <p className="mb-6 font-pixel text-xs leading-7 text-cyan-200 sm:text-sm">{s.welcome}</p>
+        <h1 className="font-pixel text-lg leading-[2] text-white drop-shadow-lg sm:text-2xl md:text-3xl">{s.hero}</h1>
+        <Link href="/shop" className="btn mt-8">{s.shopNow} →</Link>
       </div>
     </section>
-    <h2 className="font-pixel text-sm text-neon-k mb-4">{s.feat}</h2>
+    <h2 className="mb-4 text-lg font-semibold text-slate-900">{s.feat}</h2>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{data?.map(p => <ProductCard key={p.id} p={p} />)}</div>
-    <section className="grid grid-cols-2 gap-3 my-12 text-center text-xs">{s.why.map(w => <div key={w} className="bg-card border border-neon-c/40 rounded p-4">{w}</div>)}</section>
+    <section className="mt-12">
+      <h2 className="mb-4 text-lg font-semibold text-slate-900">{s.allProducts}</h2>
+      <LandingProductFilters
+        products={allProducts || []}
+        categories={(categories || []).map(category => ({
+          id: category.id,
+          slug: category.slug,
+          name: lang === "ar" ? category.name_ar || category.name_fr : category.name_fr,
+        }))}
+        language={lang}
+      />
+    </section>
+    <section className="my-12">
+      <h2 className="mb-5 text-center text-xl font-bold text-slate-900">{s.benefitsTitle}</h2>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {s.why.map((w, index) => <article key={w} className="flex min-h-36 items-center gap-4 rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:flex-col sm:justify-center sm:text-center">
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-blue-50 text-blue-700">{benefitIcons[index]}</span>
+          <h3 className="font-semibold text-slate-800">{w}</h3>
+        </article>)}
+      </div>
+    </section>
   </>);
 }

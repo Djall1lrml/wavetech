@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="800" y1="0" x2="800" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06172e"/>
+      <stop offset=".58" stop-color="#075985"/>
+      <stop offset="1" stop-color="#0c4a6e"/>
+    </linearGradient>
+    <radialGradient id="horizon" cx="0" cy="0" r="1" gradientTransform="matrix(0 520 -760 0 830 230)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38bdf8" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#0c4a6e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="deepWave" x1="740" y1="270" x2="800" y2="900" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#164e63"/>
+      <stop offset=".5" stop-color="#083344"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="crest" x1="300" y1="315" x2="1100" y2="810" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ecfeff"/>
+      <stop offset=".35" stop-color="#67e8f9"/>
+      <stop offset=".72" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#155e75"/>
+    </linearGradient>
+    <linearGradient id="foam" x1="450" y1="250" x2="1080" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset=".55" stop-color="#cffafe"/>
+      <stop offset="1" stop-color="#67e8f9"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#sky)" d="M0 0h1600v900H0z"/>
+  <path fill="url(#horizon)" d="M0 0h1600v900H0z"/>
+  <g fill="#e0f2fe" opacity=".8">
+    <circle cx="166" cy="155" r="3"/><circle cx="344" cy="254" r="2"/><circle cx="520" cy="122" r="2.5"/>
+    <circle cx="759" cy="180" r="2"/><circle cx="1290" cy="130" r="3"/><circle cx="1450" cy="270" r="2"/>
+    <circle cx="1200" cy="370" r="2"/><circle cx="248" cy="368" r="2"/>
+  </g>
+  <path d="M0 636c164-76 275-92 414-40 104 39 179 108 301 91 129-18 210-120 350-122 192-3 284 127 535 61v274H0V636Z" fill="#0e7490" opacity=".7"/>
+  <path d="M0 735c135-82 239-129 359-105 119 24 203 117 317 104 134-15 158-144 276-219 85-54 176-56 259-15-53-61-65-135-26-198 44-71 136-114 270-94-81-42-186-47-282-12-132 48-218 154-262 274-43 118-94 190-179 207-130 27-208-78-333-105-134-30-257 8-399 94Z" fill="url(#deepWave)"/>
+  <path d="M386 676c122 34 188 103 309 81 113-20 163-116 206-232 48-130 135-224 259-264 127-41 256-8 351 78-101-52-201-49-278 4-71 48-90 121-57 190 21 44 60 71 105 94-66-21-128-16-183 13-86 46-136 134-191 204-60 76-135 130-239 128-123-3-210-81-282-153Z" fill="url(#crest)"/>
+  <path d="M1030 282c91-59 212-57 309 15-78-27-148-15-194 27-43 40-47 92-17 137 23 35 59 57 100 74-72-15-129-5-171 31-36 31-56 76-74 118-16-61-2-122 43-167 38-38 88-55 145-51-59-27-104-69-123-121-10-27-15-51-18-63Z" fill="#083344"/>
+  <path d="M280 614c71-115 126-224 236-290 82-49 184-67 283-31-91-10-163 19-207 73-45 56-48 132-13 200 20 39 53 68 94 91-75-19-141-7-194 30-35 24-61 55-83 87-23-52-65-103-116-160Z" fill="#083344" opacity=".8"/>
+  <path d="M0 752c131-78 242-121 356-97 114 23 197 113 307 101 127-14 150-138 270-215 88-56 178-55 263-15-61-55-75-132-35-198 40-66 129-106 246-96" stroke="url(#foam)" stroke-linecap="round" stroke-width="18"/>
+  <path d="M775 535c42-114 118-204 224-248 91-38 183-33 267 9-74-11-137 7-174 50-33 39-35 92-8 133 20 30 51 51 88 68-64-9-111 6-146 38-41 39-59 99-84 152" stroke="#cffafe" stroke-linecap="round" stroke-width="9"/>
+  <path d="M374 648c45-82 84-155 149-197 44-29 95-41 150-31-54 7-93 34-110 75-17 41-7 88 27 125 18 20 42 35 70 47-45-3-82 11-111 39-23 22-37 48-50 73" stroke="#a5f3fc" stroke-linecap="round" stroke-width="8"/>
+  <g fill="url(#foam)">
+    <path d="M1035 282c20-38 50-59 86-68-19 18-25 38-19 58 12-24 32-36 59-34-23 10-34 25-34 44 26-18 52-15 76 8-35-8-63 2-80 27-21-21-49-33-88-35Z"/>
+    <path d="M1264 345c30-21 58-22 83-5-23-1-39 9-47 26 23-10 43-5 59 14-25-9-46-6-62 10-12-19-24-33-33-45Z"/>
+    <path d="M724 489c18-26 42-37 70-33-21 6-32 19-34 37 15-19 34-24 56-14-23-1-40 9-49 27-15-12-28-17-43-17Z"/>
+  </g>
+  <path d="M38 816c142-49 240-48 346-13 101 33 179 36 287 1 116-37 204-38 324-3 174 51 343 37 605-48v147H38v-84Z" fill="#020617" opacity=".76"/>
+</svg>
