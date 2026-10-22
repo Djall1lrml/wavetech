@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Lang from "@/components/Lang";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type Category = { slug: string; name_fr: string; name_ar: string | null };
 
@@ -67,7 +68,10 @@ export default function MobileSidebar({ lang, categories }: { lang: "fr" | "ar";
             </Link>
           ))}
         </nav>
-        <div className="mt-auto border-t border-slate-200 pt-4"><Lang /></div>
+        <div className="mt-auto space-y-3 border-t border-slate-200 pt-4">
+          <ThemeToggle lang={lang} />
+          <Lang />
+        </div>
       </aside>
     </>
   ) : null;

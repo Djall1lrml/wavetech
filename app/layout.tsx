@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLang, t } from "@/lib/i18n";
 import Lang from "@/components/Lang";
 import MobileSidebar from "@/components/MobileSidebar";
+import ThemeToggle from "@/components/ThemeToggle";
 import { pub } from "@/lib/supabase";
 export const metadata = { title: "WaveTech — Consoles rétro Algérie", description: "Game Boy style, handhelds émulateurs et accessoires. Livraison 58 wilayas, paiement à la livraison.", icons: { icon: "/wavetech-profile.jpg", shortcut: "/wavetech-profile.jpg" }, openGraph: { title: "WaveTech", images: ["/og.png"] } };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +16,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <img src="/wavetech-profile.jpg" alt="" aria-hidden="true" className="h-8 w-8 rounded-full border border-neon-c/50 object-cover shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
         <Link href="/" className="font-pixel text-neon-c text-sm">WAVETECH</Link>
       </div>
-      <nav className="hidden lg:flex gap-4 text-sm items-center"><Link href="/shop">{s.shop}</Link><Link href="/track">{s.track}</Link><Link href="/checkout">🛒</Link><Lang /></nav>
+      <nav className="hidden lg:flex gap-4 text-sm items-center"><Link href="/shop">{s.shop}</Link><Link href="/track">{s.track}</Link><Link href="/checkout">🛒</Link><ThemeToggle lang={l} /><Lang /></nav>
       <MobileSidebar lang={l} categories={categories || []} />
     </header>
       <main className="max-w-6xl mx-auto p-4">{children}</main>

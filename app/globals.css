@@ -2,3 +2,28 @@
 body{background:#fff;color:#0f172a;font-family:Inter,sans-serif}
 .btn{@apply inline-block px-4 py-3 bg-neon-c text-white font-pixel text-xs rounded shadow-sm hover:shadow-md hover:bg-blue-700 transition}
 .inp{@apply w-full p-3 rounded bg-white border border-slate-300 focus:border-neon-c outline-none}
+
+html.dark{color-scheme:dark}
+html.dark body{background:#0b1220;color:#e2e8f0}
+html.dark .bg-bg{background-color:#0b1220}
+html.dark .bg-card{background-color:#111c2e}
+html.dark .bg-white{background-color:#111c2e}
+html.dark .bg-slate-50{background-color:#172337}
+html.dark .bg-slate-100{background-color:#1e293b}
+html.dark .bg-blue-50{background-color:#172b49}
+html.dark .text-slate-900{color:#f1f5f9}
+html.dark .text-slate-800{color:#e2e8f0}
+html.dark .text-slate-700{color:#cbd5e1}
+html.dark .text-slate-600{color:#cbd5e1}
+html.dark .text-slate-500{color:#94a3b8}
+html.dark .text-slate-400{color:#94a3b8}
+html.dark .text-blue-700{color:#93c5fd}
+html.dark .border-slate-100{border-color:#263449}
+html.dark .border-slate-200{border-color:#334155}
+html.dark .border-slate-300{border-color:#475569}
+html.dark .border-blue-100{border-color:#1e3a5f}
+html.dark .inp{background-color:#111c2e;color:#e2e8f0}
+html.dark .inp::placeholder{color:#94a3b8}
+html.dark select option{background-color:#111c2e;color:#e2e8f0}
+html.dark table{color:#e2e8f0}
+html.dark .dark-toggle:hover{background-color:#172b49}
