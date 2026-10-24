@@ -6,14 +6,14 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 type Category = { slug: string; name_fr: string; name_ar: string | null };
 
-export default function MobileSidebar({ lang, categories }: { lang: "fr" | "ar"; categories: Category[] }) {
+export default function MobileSidebar({ lang, categories }: { lang: "en" | "ar"; categories: Category[] }) {
   const [open, setOpen] = useState(false);
   const closeButton = useRef<HTMLButtonElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
   const rtl = lang === "ar";
   const labels = rtl
     ? { open: "فتح القائمة", close: "إغلاق القائمة", shop: "المتجر", track: "تتبع الطلب", cart: "السلة", categories: "الفئات" }
-    : { open: "Ouvrir le menu", close: "Fermer le menu", shop: "Shop", track: "Suivi commande", cart: "Panier", categories: "Catégories" };
+    : { open: "Open menu", close: "Close menu", shop: "Shop", track: "Track order", cart: "Cart", categories: "Categories" };
 
   useEffect(() => {
     if (!open) return;

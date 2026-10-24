@@ -5,7 +5,7 @@ import Lang from "@/components/Lang";
 import MobileSidebar from "@/components/MobileSidebar";
 import ThemeToggle from "@/components/ThemeToggle";
 import { pub } from "@/lib/supabase";
-export const metadata = { title: "WaveTech — Consoles rétro Algérie", description: "Game Boy style, handhelds émulateurs et accessoires. Livraison 58 wilayas, paiement à la livraison.", icons: { icon: "/wavetech-profile.jpg", shortcut: "/wavetech-profile.jpg" }, openGraph: { title: "WaveTech", images: ["/og.png"] } };
+export const metadata = { title: "WaveTech — Retro consoles in Algeria", description: "Game Boy style handhelds, emulators, and accessories. Fast delivery across all 58 wilayas with cash on delivery.", icons: { icon: "/wavetech-profile.jpg", shortcut: "/wavetech-profile.jpg" }, openGraph: { title: "WaveTech", images: ["/og.png"] } };
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const l = getLang(), s = t();
   const { data: categories } = await pub().from("categories").select("slug,name_fr,name_ar").order("id");
@@ -26,18 +26,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <div className="space-y-3">
             <Link href="/" className="inline-block font-pixel text-neon-c text-sm">WAVETECH</Link>
             <p className="max-w-xs text-sm leading-6 text-slate-600">
-              {l === "ar" ? "أجهزة ألعاب كلاسيكية وإكسسوارات، مع التوصيل إلى 58 ولاية." : "Consoles rétro et accessoires, livrés dans les 58 wilayas."}
+              {l === "ar" ? "أجهزة ألعاب كلاسيكية وإكسسوارات، مع التوصيل إلى 58 ولاية." : "Retro consoles and accessories, delivered across all 58 wilayas."}
             </p>
           </div>
           <div className="space-y-3">
-            <h2 className="text-base font-semibold text-slate-900">{l === "ar" ? "روابط سريعة" : "Liens rapides"}</h2>
+            <h2 className="text-base font-semibold text-slate-900">{l === "ar" ? "روابط سريعة" : "Quick links"}</h2>
             <nav className="flex flex-col items-start gap-2 text-sm text-slate-600">
               <Link className="hover:text-neon-c transition" href="/shop">{s.shop}</Link>
               <Link className="hover:text-neon-c transition" href="/track">{s.track}</Link>
             </nav>
           </div>
           <div className="space-y-3">
-            <h2 className="text-base font-semibold text-slate-900">{l === "ar" ? "تابعونا" : "Suivez-nous"}</h2>
+            <h2 className="text-base font-semibold text-slate-900">{l === "ar" ? "تابعونا" : "Follow us"}</h2>
             <a href="https://www.instagram.com/wavetech.dz/" target="_blank" rel="noopener noreferrer" aria-label="Instagram WaveTech" className="inline-flex items-center gap-2 text-sm text-slate-600 hover:text-neon-c transition">
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 fill-none stroke-current" strokeWidth="1.8">
                 <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <p className="max-w-6xl mx-auto px-5 py-4 text-xs text-slate-500">
             © {new Date().getFullYear()} WaveTech
             <span className="mx-2">·</span>
-            {l === "ar" ? "جميع الحقوق محفوظة" : "Tous droits réservés"}
+            {l === "ar" ? "جميع الحقوق محفوظة" : "All rights reserved"}
           </p>
         </div>
       </footer></body></html>);

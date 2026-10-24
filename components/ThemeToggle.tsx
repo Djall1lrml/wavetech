@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle({ lang }: { lang: "fr" | "ar" }) {
+export default function ThemeToggle({ lang }: { lang: "en" | "ar" }) {
   const [dark, setDark] = useState(false);
   const isArabic = lang === "ar";
 
@@ -32,7 +32,7 @@ export default function ThemeToggle({ lang }: { lang: "fr" | "ar" }) {
 
   const label = isArabic
     ? dark ? "الوضع النهاري" : "الوضع الليلي"
-    : dark ? "Mode jour" : "Mode nuit";
+    : dark ? "Light mode" : "Dark mode";
 
   return (
     <button

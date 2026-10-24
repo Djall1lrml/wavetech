@@ -11,9 +11,9 @@ export default async function Shop({ searchParams: sp }: { searchParams: Record<
   const { data } = await q;
   return (<><form className="grid grid-cols-2 md:grid-cols-6 gap-2 mb-6">
     <input name="q" placeholder={s.search} className="inp col-span-2" defaultValue={sp.q} />
-    <select name="cat" className="inp" defaultValue={sp.cat}><option value="">Catégorie</option><option value="consoles">Consoles</option><option value="accessories">Accessoires</option></select>
-    <select name="sort" className="inp" defaultValue={sp.sort}><option value="">Nouveautés</option><option value="price_asc">Prix ↑</option><option value="price_desc">Prix ↓</option></select>
-    <input name="max" type="number" placeholder="Prix max" className="inp" defaultValue={sp.max} />
+    <select name="cat" className="inp" defaultValue={sp.cat}><option value="">Category</option><option value="consoles">Consoles</option><option value="accessories">Accessories</option></select>
+    <select name="sort" className="inp" defaultValue={sp.sort}><option value="">New arrivals</option><option value="price_asc">Price ↑</option><option value="price_desc">Price ↓</option></select>
+    <input name="max" type="number" placeholder="Max price" className="inp" defaultValue={sp.max} />
     <label className="flex items-center gap-2 text-sm"><input type="checkbox" name="stock" value="1" defaultChecked={!!sp.stock} />{s.stock}</label>
     <button className="btn col-span-2 md:col-span-1">OK</button></form>
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{data?.map(p => <ProductCard key={p.id} p={p} />)}</div></>);

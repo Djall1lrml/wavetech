@@ -20,13 +20,13 @@ export default function LandingProductFilters({
 }: {
   products: Product[];
   categories: Category[];
-  language: "fr" | "ar";
+  language: "en" | "ar";
 }) {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const visibleProducts = selectedCategory === null
     ? products
     : products.filter(product => product.category_id === selectedCategory);
-  const allLabel = language === "ar" ? "الكل" : "Tous";
+  const allLabel = language === "ar" ? "الكل" : "All";
 
   const buttonClass = (active: boolean) =>
     `rounded-full border px-4 py-2 text-sm font-medium transition ${
@@ -37,7 +37,7 @@ export default function LandingProductFilters({
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label={language === "ar" ? "تصفية المنتجات حسب الفئة" : "Filtrer les produits par catégorie"}>
+      <div className="mb-5 flex flex-wrap gap-2" role="group" aria-label={language === "ar" ? "تصفية المنتجات حسب الفئة" : "Filter products by category"}>
         <button type="button" aria-pressed={selectedCategory === null} onClick={() => setSelectedCategory(null)} className={buttonClass(selectedCategory === null)}>
           {allLabel}
         </button>
@@ -56,7 +56,7 @@ export default function LandingProductFilters({
       {visibleProducts.length > 0
         ? <div className="grid grid-cols-2 gap-3 md:grid-cols-4">{visibleProducts.map(product => <ProductCard key={product.id} p={product} />)}</div>
         : <p className="rounded-lg border border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-600">
-          {language === "ar" ? "لا توجد منتجات في هذه الفئة حاليًا." : "Aucun produit dans cette catégorie pour le moment."}
+          {language === "ar" ? "لا توجد منتجات في هذه الفئة حاليًا." : "No products in this category yet."}
         </p>}
     </>
   );

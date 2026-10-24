@@ -154,17 +154,17 @@ export default async function Admin() {
 
   return (
     <div className="space-y-10 text-sm">
-      <h1 className="text-2xl font-bold text-slate-900">Tableau de bord</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
       <div className="grid gap-3 sm:grid-cols-2">
-        <p className="rounded-lg border border-slate-200 bg-card p-4"><b>Commandes aujourd'hui:</b> {todayOrders.length}</p>
-        <p className="rounded-lg border border-slate-200 bg-card p-4"><b>Chiffre d'affaires livré:</b> {deliveredRevenue} DA</p>
+        <p className="rounded-lg border border-slate-200 bg-card p-4"><b>Today's orders:</b> {todayOrders.length}</p>
+        <p className="rounded-lg border border-slate-200 bg-card p-4"><b>Delivered revenue:</b> {deliveredRevenue} DA</p>
       </div>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Commandes ({orders?.length || 0})</h2>
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">Orders ({orders?.length || 0})</h2>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className={tableClass}>
-            <thead><tr>{["Code / ID", "Créée le", "Client", "Téléphone", "Wilaya", "Commune", "Adresse", "Livraison", "Articles", "Sous-total", "Frais", "Total", "Notes", "Statut"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
+            <thead><tr>{["Code / ID", "Created at", "Customer", "Phone", "Wilaya", "Commune", "Address", "Delivery", "Items", "Subtotal", "Fees", "Total", "Notes", "Status"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
             <tbody>{orders?.map(order => <tr key={order.id} className="hover:bg-blue-50/40">
               <td className={tdClass}><b>{order.code}</b><details className="mt-1"><summary className="cursor-pointer text-blue-700">ID complet</summary><span className="break-all">{order.id}</span></details></td>
               <td className={tdClass}>{new Date(order.created_at).toLocaleString("fr-DZ")}</td>
@@ -173,7 +173,7 @@ export default async function Admin() {
               <td className={tdClass}>{order.wilayas?.id} · {order.wilayas?.name}</td>
               <td className={tdClass}>{order.commune}</td>
               <td className={`${tdClass} max-w-52 whitespace-normal`}>{order.address || "—"}</td>
-              <td className={tdClass}>{order.delivery_type === "home" ? "À domicile" : "Stop desk"}</td>
+              <td className={tdClass}>{order.delivery_type === "home" ? "Home delivery" : "Pickup desk"}</td>
               <td className={tdClass}><ul className="space-y-1">{order.order_items?.map((item: any) => <li key={item.id}>{item.name} × {item.qty} · {item.price} DA</li>)}</ul></td>
               <td className={tdClass}>{order.subtotal} DA</td>
               <td className={tdClass}>{order.delivery_price} DA</td>
@@ -182,7 +182,7 @@ export default async function Admin() {
               <td className={tdClass}><form action={setStatus} className="flex min-w-40 flex-col gap-2">
                 <input type="hidden" name="id" value={order.id} />
                 <select name="status" defaultValue={order.status} className={inputClass}>{["new", "confirmed", "shipped", "delivered", "returned", "cancelled"].map(status => <option key={status}>{status}</option>)}</select>
-                <button className="btn !py-2">Enregistrer</button>
+                <button className="btn !py-2">Save</button>
               </form></td>
             </tr>)}</tbody>
           </table>
@@ -190,10 +190,10 @@ export default async function Admin() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Produits ({products?.length || 0})</h2>
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">Products ({products?.length || 0})</h2>
         <div className="mb-5 overflow-x-auto rounded-lg border border-slate-200">
           <table className={tableClass}>
-            <thead><tr>{["Image", "ID", "Nom", "Slug", "Description", "Prix", "Ancien prix", "Marque", "Catégorie", "Stock", "Vedette", "Caractéristiques", "Créé le", "Actions"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
+            <thead><tr>{["Image", "ID", "Name", "Slug", "Description", "Price", "Old price", "Brand", "Category", "Stock", "Featured", "Specs", "Created at", "Actions"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
             <tbody>{products?.map(product => <tr key={product.id} className="hover:bg-blue-50/40">
               <td className={tdClass}>{product.product_images?.map((image: any) => <a key={image.id} href={image.url} target="_blank" rel="noreferrer"><img src={image.url} alt={product.name} className="mb-1 h-12 w-12 rounded object-cover" /></a>) || "—"}</td>
               <td className={`${tdClass} max-w-32 break-all`}>{product.id}</td>
@@ -205,49 +205,49 @@ export default async function Admin() {
               <td className={tdClass}>{product.brand || "—"}</td>
               <td className={tdClass}>{product.categories?.name_fr || product.category_id || "—"}</td>
               <td className={tdClass}>{product.stock}</td>
-              <td className={tdClass}>{product.featured ? "Oui" : "Non"}</td>
+              <td className={tdClass}>{product.featured ? "Yes" : "No"}</td>
               <td className={`${tdClass} max-w-56 whitespace-normal`}><pre className="whitespace-pre-wrap">{JSON.stringify(product.specs || {}, null, 2)}</pre></td>
               <td className={tdClass}>{new Date(product.created_at).toLocaleDateString("fr-DZ")}</td>
               <td className={tdClass}><div className="flex min-w-44 flex-col gap-2">
                 <form action={setStock} className="flex items-center gap-2"><input type="hidden" name="id" value={product.id} /><input aria-label={`Stock de ${product.name}`} name="stock" type="number" min="0" step="1" defaultValue={product.stock} className="inp !w-20" /><button className="btn !py-2">Stock</button></form>
                 <form action={setProductPrice} className="flex items-center gap-2"><input type="hidden" name="id" value={product.id} /><input aria-label={`Prix de ${product.name}`} name="price" type="number" min="0" step="1" defaultValue={product.price} className="inp !w-24" /><button className="btn !py-2">Prix</button></form>
-                <form action={delProduct}><input type="hidden" name="id" value={product.id} /><button className="text-left text-red-600 hover:underline">Supprimer</button></form>
+                <form action={delProduct}><input type="hidden" name="id" value={product.id} /><button className="text-left text-red-600 hover:underline">Delete</button></form>
               </div></td>
             </tr>)}</tbody>
           </table>
         </div>
         <details className="rounded-lg border border-slate-200 bg-card p-4" open>
-          <summary className="cursor-pointer font-semibold text-slate-900">Ajouter un produit</summary>
+          <summary className="cursor-pointer font-semibold text-slate-900">Add product</summary>
           <form action={addProduct} className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <label className="space-y-1"><span>Nom *</span><input name="name" className={inputClass} required /></label>
-            <label className="space-y-1"><span>Slug (optionnel, ajusté automatiquement)</span><input name="slug" className={inputClass} placeholder="console-retro" /></label>
-            <label className="space-y-1"><span>Prix (DA) *</span><input name="price" type="number" min="0" step="1" className={inputClass} required /></label>
-            <label className="space-y-1"><span>Ancien prix (DA)</span><input name="old_price" type="number" min="0" step="1" className={inputClass} /></label>
-            <label className="space-y-1"><span>Marque</span><input name="brand" className={inputClass} /></label>
-            <label className="space-y-1"><span>Catégorie *</span><select name="category_id" className={inputClass} required defaultValue=""><option value="" disabled>Choisir une catégorie</option>{categories?.map(category => <option key={category.id} value={category.id}>{category.name_fr}{category.name_ar ? ` / ${category.name_ar}` : ""}</option>)}</select></label>
+            <label className="space-y-1"><span>Name *</span><input name="name" className={inputClass} required /></label>
+            <label className="space-y-1"><span>Slug (optional, auto-adjusted)</span><input name="slug" className={inputClass} placeholder="console-retro" /></label>
+            <label className="space-y-1"><span>Price (DA) *</span><input name="price" type="number" min="0" step="1" className={inputClass} required /></label>
+            <label className="space-y-1"><span>Old price (DA)</span><input name="old_price" type="number" min="0" step="1" className={inputClass} /></label>
+            <label className="space-y-1"><span>Brand</span><input name="brand" className={inputClass} /></label>
+            <label className="space-y-1"><span>Category *</span><select name="category_id" className={inputClass} required defaultValue=""><option value="" disabled>Select a category</option>{categories?.map(category => <option key={category.id} value={category.id}>{category.name_fr}{category.name_ar ? ` / ${category.name_ar}` : ""}</option>)}</select></label>
             <label className="space-y-1"><span>Stock *</span><input name="stock" type="number" min="0" step="1" defaultValue="0" className={inputClass} required /></label>
-            <label className="flex items-center gap-2 self-end rounded-lg border border-slate-200 bg-white p-3"><input name="featured" type="checkbox" />Produit vedette</label>
+            <label className="flex items-center gap-2 self-end rounded-lg border border-slate-200 bg-white p-3"><input name="featured" type="checkbox" />Featured product</label>
             <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Description</span><textarea name="description" rows={3} className={inputClass} /></label>
-            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Caractéristiques (objet JSON)</span><textarea name="specs" rows={4} className={inputClass} placeholder={'{"Écran":"3 pouces","Batterie":"3000 mAh"}'} /></label>
-            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Image du produit</span><input name="image" type="file" accept="image/*" className={inputClass} /></label>
-            <button className="btn sm:col-span-2 lg:col-span-3">Ajouter le produit</button>
+            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Features (JSON object)</span><textarea name="specs" rows={4} className={inputClass} placeholder={'{"Screen":"3 inches","Battery":"3000 mAh"}'} /></label>
+            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Product image</span><input name="image" type="file" accept="image/*" className={inputClass} /></label>
+            <button className="btn sm:col-span-2 lg:col-span-3">Add product</button>
           </form>
         </details>
       </section>
 
       <section>
-        <h2 className="mb-3 text-lg font-semibold text-slate-900">Wilayas et frais de livraison ({wilayas?.length || 0})</h2>
+        <h2 className="mb-3 text-lg font-semibold text-slate-900">Wilayas and delivery fees ({wilayas?.length || 0})</h2>
         <div className="overflow-x-auto rounded-lg border border-slate-200">
           <table className="w-full min-w-[34rem] border-collapse text-left text-sm">
-            <thead><tr>{["ID", "Wilaya", "Tarifs et action"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
+            <thead><tr>{["ID", "Wilaya", "Rates and action"].map(label => <th key={label} className={thClass}>{label}</th>)}</tr></thead>
             <tbody>{wilayas?.map(wilaya => <tr key={wilaya.id}>
               <td className={tdClass}>{wilaya.id}</td>
               <td className={tdClass}>{wilaya.name}</td>
               <td className={tdClass}><form action={setPrice} className="flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={wilaya.id} />
-                <label className="flex items-center gap-2">Domicile<input aria-label={`Livraison à domicile ${wilaya.name} en DA`} name="home" type="number" min="0" defaultValue={wilaya.home_price} className="inp !w-24" /></label>
-                <label className="flex items-center gap-2">Stop desk<input aria-label={`Livraison stop desk ${wilaya.name} en DA`} name="desk" type="number" min="0" defaultValue={wilaya.desk_price} className="inp !w-24" /></label>
-                <button className="btn !py-2">Enregistrer</button>
+                <label className="flex items-center gap-2">Home<input aria-label={`Home delivery ${wilaya.name} in DA`} name="home" type="number" min="0" defaultValue={wilaya.home_price} className="inp !w-24" /></label>
+                <label className="flex items-center gap-2">Pickup desk<input aria-label={`Pickup desk delivery ${wilaya.name} in DA`} name="desk" type="number" min="0" defaultValue={wilaya.desk_price} className="inp !w-24" /></label>
+                <button className="btn !py-2">Save</button>
               </form></td>
             </tr>)}</tbody>
           </table>
