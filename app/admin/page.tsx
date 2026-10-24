@@ -85,15 +85,23 @@ async function addProduct(fd: FormData) {
   }).select("id").single();
   if (error) throw new Error(`Could not add product: ${error.message}`);
 
-  const image = fd.get("image");
-  if (image instanceof File && image.size > 0) {
+  const imageValues = fd.getAll("images");
+  const images = imageValues.filter((value): value is File => value instanceof File && value.size > 0);
+  if (imageValues.some(value => value instanceof File && value.size > 0 && !value.type.startsWith("image/"))) {
+    throw new Error("Product images must be image files");
+  }
+  const imageRecords = [];
+  for (const [position, image] of images.entries()) {
     const safeName = image.name.replace(/[^a-zA-Z0-9._-]/g, "-");
-    const path = `${product.id}/${Date.now()}-${safeName}`;
+    const path = `${product.id}/${Date.now()}-${position}-${safeName}`;
     const { error: uploadError } = await db.storage.from("products").upload(path, image);
-    if (uploadError) throw new Error(`Product was added but image upload failed: ${uploadError.message}`);
+    if (uploadError) throw new Error(`Product was added but image upload failed for ${image.name}: ${uploadError.message}`);
     const url = db.storage.from("products").getPublicUrl(path).data.publicUrl;
-    const { error: imageError } = await db.from("product_images").insert({ product_id: product.id, url });
-    if (imageError) throw new Error(`Product was added but image record failed: ${imageError.message}`);
+    imageRecords.push({ product_id: product.id, url, position });
+  }
+  if (imageRecords.length > 0) {
+    const { error: imageError } = await db.from("product_images").insert(imageRecords);
+    if (imageError) throw new Error(`Product was added but image records failed: ${imageError.message}`);
   }
   revalidatePath("/admin");
   revalidatePath("/");
@@ -132,6 +140,52 @@ async function setProductPrice(fd: FormData) {
   const { error } = await admin().from("products").update({ price }).eq("id", id);
   if (error) throw new Error(`Could not update product price: ${error.message}`);
   revalidatePath("/admin");
+}
+
+async function addProductImages(fd: FormData) {
+  "use server";
+  await guard();
+  const id = fd.get("id");
+  if (typeof id !== "string" || !id) throw new Error("Invalid product id");
+  const imageValues = fd.getAll("images");
+  const images = imageValues.filter((value): value is File => value instanceof File && value.size > 0);
+  if (imageValues.some(value => value instanceof File && value.size > 0 && !value.type.startsWith("image/"))) {
+    throw new Error("Product images must be image files");
+  }
+  if (images.length === 0) throw new Error("Select at least one image");
+
+  const db = admin();
+  const { data: product, error: productError } = await db.from("products").select("id,slug").eq("id", id).maybeSingle();
+  if (productError) throw new Error(`Could not find product: ${productError.message}`);
+  if (!product) throw new Error("Product not found");
+
+  const { data: lastImage, error: imagesError } = await db.from("product_images")
+    .select("position")
+    .eq("product_id", id)
+    .order("position", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (imagesError) throw new Error(`Could not load existing product images: ${imagesError.message}`);
+
+  const firstPosition = (lastImage?.position ?? -1) + 1;
+  for (const [index, image] of images.entries()) {
+    const safeName = image.name.replace(/[^a-zA-Z0-9._-]/g, "-");
+    const path = `${id}/${Date.now()}-${index}-${safeName}`;
+    const { error: uploadError } = await db.storage.from("products").upload(path, image);
+    if (uploadError) throw new Error(`Image upload failed for ${image.name}: ${uploadError.message}`);
+    const url = db.storage.from("products").getPublicUrl(path).data.publicUrl;
+    const { error: imageError } = await db.from("product_images").insert({
+      product_id: id,
+      url,
+      position: firstPosition + index,
+    });
+    if (imageError) throw new Error(`Image uploaded but its product record failed for ${image.name}: ${imageError.message}`);
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/shop");
+  revalidatePath(`/product/${product.slug}`);
 }
 
 export default async function Admin() {
@@ -209,6 +263,11 @@ export default async function Admin() {
               <td className={`${tdClass} max-w-56 whitespace-normal`}><pre className="whitespace-pre-wrap">{JSON.stringify(product.specs || {}, null, 2)}</pre></td>
               <td className={tdClass}>{new Date(product.created_at).toLocaleDateString("fr-DZ")}</td>
               <td className={tdClass}><div className="flex min-w-44 flex-col gap-2">
+                <form action={addProductImages} className="flex flex-col gap-2">
+                  <input type="hidden" name="id" value={product.id} />
+                  <input aria-label={`Add images for ${product.name}`} name="images" type="file" accept="image/*" multiple required className="w-48 text-xs" />
+                  <button className="btn !py-2">Add images</button>
+                </form>
                 <form action={setStock} className="flex items-center gap-2"><input type="hidden" name="id" value={product.id} /><input aria-label={`Stock de ${product.name}`} name="stock" type="number" min="0" step="1" defaultValue={product.stock} className="inp !w-20" /><button className="btn !py-2">Stock</button></form>
                 <form action={setProductPrice} className="flex items-center gap-2"><input type="hidden" name="id" value={product.id} /><input aria-label={`Prix de ${product.name}`} name="price" type="number" min="0" step="1" defaultValue={product.price} className="inp !w-24" /><button className="btn !py-2">Prix</button></form>
                 <form action={delProduct}><input type="hidden" name="id" value={product.id} /><button className="text-left text-red-600 hover:underline">Delete</button></form>
@@ -229,7 +288,7 @@ export default async function Admin() {
             <label className="flex items-center gap-2 self-end rounded-lg border border-slate-200 bg-white p-3"><input name="featured" type="checkbox" />Featured product</label>
             <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Description</span><textarea name="description" rows={3} className={inputClass} /></label>
             <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Features (JSON object)</span><textarea name="specs" rows={4} className={inputClass} placeholder={'{"Screen":"3 inches","Battery":"3000 mAh"}'} /></label>
-            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Product image</span><input name="image" type="file" accept="image/*" className={inputClass} /></label>
+            <label className="space-y-1 sm:col-span-2 lg:col-span-3"><span>Product images (select multiple)</span><input name="images" type="file" accept="image/*" multiple className={inputClass} /></label>
             <button className="btn sm:col-span-2 lg:col-span-3">Add product</button>
           </form>
         </details>

@@ -7,9 +7,10 @@ export async function generateMetadata({ params }: any) {
 export default async function Product({ params }: any) {
   const s = t(); const { data: p } = await pub().from("products").select("*,product_images(*)").eq("slug", params.slug).single();
   if (!p) notFound();
+  const images = [...p.product_images].sort((a: any, b: any) => a.position - b.position);
   const { data: rel } = await pub().from("products").select("*,product_images(*)").eq("category_id", p.category_id).neq("id", p.id).limit(4);
   return (<><div className="grid md:grid-cols-2 gap-6">
-    <div className="flex md:grid gap-2 overflow-x-auto snap-x">{p.product_images.map((i: any) => <img key={i.id} src={i.url} alt={p.name} className="snap-center rounded-lg min-w-full md:min-w-0" />)}</div>
+    <div className="flex md:grid gap-2 overflow-x-auto snap-x">{images.map((i: any) => <img key={i.id} src={i.url} alt={p.name} className="snap-center rounded-lg min-w-full md:min-w-0" />)}</div>
     <div><h1 className="font-pixel text-base leading-relaxed text-neon-c">{p.name}</h1>
       <p className="my-4 text-xl font-bold">{dzd(p.price)} {p.old_price && <><s className="opacity-50 text-sm">{dzd(p.old_price)}</s> <span className="text-neon-c text-sm">-{Math.round(100 - p.price * 100 / p.old_price)}%</span></>}</p>
       <p className={p.stock > 0 ? "text-green-400" : "text-red-400"}>{p.stock > 0 ? s.stock : s.out}</p>
